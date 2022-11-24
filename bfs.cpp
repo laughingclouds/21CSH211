@@ -1,55 +1,47 @@
-#include <iostream>
-#include <list>
+#include <stdio.h>
+#include <stdlib.h>
+void bfs(int v);
+int a[50][50], n, visited[50];
+int q[20], front = -1, rear = -1;
 
-class Graph {
-  int numVertices;
-  std::list<int> *adjLists;
-  bool *visited;
+void creategraph() {
+  int i, j;
+  printf("\nEnter the number of vertices in graph:  ");
+  scanf("%d", &n);
+  printf("\nEnter the adjacency matrix:\n");
+  for (i = 1; i <= n; i++)
+    for (j = 1; j <= n; j++)
+      scanf("%d", &a[i][j]);
+}
 
-public:
-  Graph(int vertices) {
-    numVertices = vertices;
-    adjLists = new std::list<int>[vertices];
-  };
-
-  void addEdge(int src, int dest) {
-    adjLists[src].push_back(dest);
-    adjLists[dest].push_back(src);
-  };
-
-  void BFS(int startVertex) {
-    visited = new bool[numVertices];
-    for (int i = 0; i < numVertices; i++)
-      visited[i] = false;
-    std::list<int> queue;
-    visited[startVertex] = true;
-    queue.push_back(startVertex);
-    std::list<int>::iterator i;
-    while (!queue.empty()) {
-      int currVertex = queue.front();
-      std::cout << "Visited " << currVertex << '\n';
-
-      queue.pop_front();
-      for (i = adjLists[currVertex].begin(); i != adjLists[currVertex].end();
-           ++i) {
-        int adjVertex = *i;
-        if (!visited[adjVertex]) {
-          visited[adjVertex] = true;
-          queue.push_back(adjVertex);
-        }
+void bfs(int v) {
+  int i, cur;
+  visited[v] = 1;
+  q[++rear] = v;
+  printf("\nNodes reachable from starting vertex %d are: ", v);
+  while (front != rear) {
+    cur = q[++front];
+    for (i = 1; i <= n; i++) {
+      if ((a[cur][i] == 1) && (visited[i] == 0)) {
+        q[++rear] = i;
+        visited[i] = 1;
+        printf("%d ", i);
       }
     }
-  };
-};
+  }
+}
 
 int main() {
-  Graph g(4);
-  g.addEdge(0, 1);
-  g.addEdge(0, 2);
-  g.addEdge(1, 2);
-  g.addEdge(2, 0);
-  g.addEdge(2, 3);
-  g.addEdge(3, 3);
-  g.BFS(2);
-  return 0;
+  int ch, start, i, j;
+  creategraph();
+
+  for (i = 1; i <= n; i++)
+    visited[i] = 0;
+  printf("\nEnter the starting vertex: ");
+  scanf("%d", &start);
+  bfs(start);
+  for (i = 1; i <= n; i++) {
+    if (visited[i] == 0)
+      printf("\nThe vertex that is not reachable is %d", i);
+  }
 }
