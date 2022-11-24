@@ -17,38 +17,27 @@ int length = 0;
 /*Display all elements forming a linked list starting with
 head.*/
 void displayAll(Node *head) {
-  if (!head) {
-    std::cout << "No elements to display\n";
-    return;
-  }
-  Node *tempHead = head;
+  if (!head) return;
+  std::cout << head->data << ' ';
+  displayAll(head->next);
+}
 
-  while (tempHead != nullptr) {
-    std::cout << tempHead->data << ' ';
-    tempHead = tempHead->next;
-  }
+/*Recursively search for an element in the linked list. Return -1 
+if not found.*/
+int recurSearch(Node *head, int pos, int data) {
+  if (!head)
+    return -1;
 
-  std::cout << '\n';
+  if (head->data == data)
+    return pos + 1;
+
+  return recurSearch(head->next, pos + 1, data);
 }
 
 /*Return position of first node which has given data.
 Return -1 if not found.*/
 int search(int data) {
-  int position = 0;
-
-  Node *tempHead = linkedList;
-  while (tempHead) {
-    if (tempHead->data == data) {
-      break;
-    }
-
-    tempHead = tempHead->next;
-    position++;
-  }
-  if (!tempHead)
-    position = -1;
-
-  return position;
+  return recurSearch(linkedList, -1, data);
 }
 
 /*insert element while keeping sorted order in mind*/
@@ -151,7 +140,10 @@ int main() {
       break;
 
     case 'd':
-      displayAll(linkedList);
+      if (length == 0)
+        std::cout << "No elements to displayAll\n";
+      else
+        displayAll(linkedList);
       break;
     case 'e':
       return 0;
